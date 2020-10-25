@@ -1,14 +1,17 @@
-const express = require('express');
-require('dotenv').config();//para leer variables de entorno
+const express = require("express");
+require("dotenv").config(); //para leer variables de entorno
 
-const cors = require('cors');
-const { dbConnection } = require('./database/config');
-const { PromiseProvider } = require('mongoose');
+const cors = require("cors");
+const { dbConnection } = require("./database/config");
+const { PromiseProvider } = require("mongoose");
 
 // crear servidor express
 const app = express();
 // configurar cors
-app.use( cors() )
+app.use(cors());
+
+//parseo del body
+app.use(express.json());
 
 dbConnection();
 
@@ -16,18 +19,9 @@ dbConnection();
 //mean_user
 
 //Rutas
-app.get( '/', (req, res) => {
+app.use("/api/usuarios", require("./routes/usuarios-route"));
+app.use("/api/login", require("./routes/auth"));
 
-    res.json({
-        ok: true,
-        msg: 'Hola mundo'
-    })
-
-});
-
-
-
-
-app.listen( process.env.PORT, () =>{
-    console.log('servidor corriendooooo')
+app.listen(process.env.PORT, () => {
+  console.log("servidor corriendooooo");
 });
