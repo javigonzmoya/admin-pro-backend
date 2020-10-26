@@ -5,12 +5,24 @@ const Usuario = require("../models/usuario");
 const { generarJWT } = require("../helpers/jwt");
 
 const getUsuarios = async (req, res = response) => {
-  const usuarios = await Usuario.find({}, "nombre email role");
+  const desde = Number(req.query.desde) || 0;
+  console.log(desde);
+
+  /*const usuarios = await Usuario.find({}, "nombre email role")
+    .skip(desde)
+    .limit(5);
+
+  const total = await Usuario.count();*/
+
+  const [usuarios, total] = await Promise.all([
+    Usuario.find({}, "nombre email role img").skip(desde).limit(5),
+    Usuario.countDocuments(),
+  ]);
 
   res.json({
     ok: true,
     usuarios,
-    uid: req.uid, //mandamos el uid del usuario de sesion ---compartimos el token entre peticiomens de middlewere
+    total, //mandamos el uid del usuario de sesion ---compartimos el token entre peticiomens de middlewere
   });
 };
 

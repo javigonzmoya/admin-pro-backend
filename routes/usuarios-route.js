@@ -30,6 +30,7 @@ router.post(
 router.put(
   "/:id",
   [
+    validarJWT,
     check("nombre", "El nombre es obligatorio").notEmpty(),
     check("email", "El email es obligatorio y formato valido").isEmail(),
     validarCampos, //llamamos almiddle tras coger los errores
@@ -37,6 +38,6 @@ router.put(
   updateUsuario
 ); // podemos llmar a midell para validar en segunda posicion del argumento si son varios como arr
 
-router.delete("/:id", deleteUsuario);
+router.delete("/:id", validarJWT, deleteUsuario);
 
 module.exports = router;
