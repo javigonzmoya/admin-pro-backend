@@ -40,6 +40,20 @@ const login = async (req, res = response) => {
   }
 };
 
+const renweToken = async (req, res = response) => {
+  const { uid } = req.body;
+
+  // generar token--jwk
+  const token = await generarJWT(uid);
+
+  res.status(404).json({
+    ok: true,
+    msg: "Refrescar token",
+    token,
+  });
+};
+
 module.exports = {
   login,
+  renweToken,
 };

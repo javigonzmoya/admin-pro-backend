@@ -26,8 +26,16 @@ router.post(
   addHospital
 );
 
-router.put("/:id", [], updateHospital); // podemos llmar a midell para validar en segunda posicion del argumento si son varios como arr
+router.put(
+  "/:id",
+  [
+    validarJWT,
+    check("nombre", "nombre es requerido").notEmpty(),
+    validarCampos,
+  ],
+  updateHospital
+); // podemos llmar a midell para validar en segunda posicion del argumento si son varios como arr
 
-router.delete("/:id", deleteHospital);
+router.delete("/:id", validarJWT, deleteHospital);
 
 module.exports = router;

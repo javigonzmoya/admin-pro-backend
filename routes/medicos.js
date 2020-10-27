@@ -27,7 +27,16 @@ router.post(
   addMedico
 );
 
-router.put("/:id", [], updateMedico); // podemos llmar a midell para validar en segunda posicion del argumento si son varios como arr
+router.put(
+  "/:id",
+  [
+    validarJWT,
+    check("nombre", "nombre del medico es requerido").notEmpty(),
+    check("hospital", "Hospital id es requerido").isMongoId(),
+    validarCampos,
+  ],
+  updateMedico
+); // podemos llmar a midell para validar en segunda posicion del argumento si son varios como arr
 
 router.delete("/:id", deleteMedico);
 

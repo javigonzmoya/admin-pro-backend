@@ -28,18 +28,69 @@ const addHospital = async (req, res) => {
   }
 };
 
-const updateHospital = (req, res) => {
-  res.json({
-    ok: true,
-    msg: "puthospitales",
-  });
+const updateHospital = async (req, res = response) => {
+  const { id } = req.params;
+  const uid = req.uid;
+
+  try {
+    const hospitalDB = await Hospital.findById(id);
+
+    if (!hospitalDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Id de hospital inexistente",
+      });
+    }
+
+    const cambiosHospital = {
+      ...req.body,
+      usuario: uid,
+    };
+
+    const hospitalAztualizado = await Hospital.findByIdAndUpdate(
+      id,
+      cambiosHospital,
+      { new: true }
+    );
+
+    res.json({
+      ok: true,
+      msg: "Hospital aztualizado",
+      hospital: hospitalAztualizado,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Ocurrio un error inexperado",
+    });
+  }
 };
 
-const deleteHospital = (req, res) => {
-  res.json({
-    ok: true,
-    msg: "deletehospitales",
-  });
+const deleteHospital = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const hospitalDB = await Hospital.findById(id);
+
+    if (!hospitalDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Id de hospital inexistente",
+      });
+    }
+
+    await Hospital.findByIdAndDelete(id);
+
+    res.json({
+      ok: true,
+      msg: "Hospital Borrado",
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Ocurrio un error inexperado",
+    });
+  }
 };
 
 module.exports = {
